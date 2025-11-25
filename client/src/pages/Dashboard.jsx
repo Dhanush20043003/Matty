@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { Search, Grid, Layout, Image, Star, Clock, Trash2, Crown, Filter, Plus, ArrowRight, Palette, Type, Camera, Layers, Zap, Gift, TrendingUp, Smartphone, Monitor, FileText, Instagram, Facebook, Twitter, Youtube, Package } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Search, Grid, Layout, Image, Star, Clock, Trash2, Crown, Filter, Plus, 
+  ArrowRight, Palette, Type, Camera, Layers, Zap, Gift, TrendingUp, 
+  Smartphone, Monitor, FileText, Instagram, Facebook, Twitter, Youtube, 
+  Package, Download, Edit 
+} from 'lucide-react';
 
-const MattyUltimateDashboard = () => {
+const MattyDashboard = () => {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState('grid'); // grid or list
-  const [showFilters, setShowFilters] = useState(false);
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [viewMode, setViewMode] = useState('grid');
 
   const categories = [
     { id: 'all', name: 'All Templates', icon: Grid, count: 1500, color: 'from-purple-500 to-pink-500' },
@@ -137,9 +142,13 @@ const MattyUltimateDashboard = () => {
     const matchesCategory = activeCategory === 'all' || t.category === activeCategory;
     const matchesSearch = t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           t.tags.some(tag => tag.includes(searchQuery.toLowerCase()));
-    const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => t.tags.includes(tag));
-    return matchesCategory && matchesSearch && matchesTags;
+    return matchesCategory && matchesSearch;
   });
+
+  // Function to open editor
+  const openEditor = () => {
+    navigate('/editor');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -190,9 +199,12 @@ const MattyUltimateDashboard = () => {
               <button className="p-2 hover:bg-slate-100 rounded-lg transition">
                 <Star className="w-5 h-5 text-slate-600" />
               </button>
-              <button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2.5 rounded-full font-bold hover:shadow-lg transition">
+              <button 
+                onClick={openEditor}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2.5 rounded-full font-bold hover:shadow-lg transition"
+              >
                 <Plus className="w-5 h-5 inline mr-2" />
-                Create New
+                Create New Design
               </button>
             </div>
           </div>
@@ -254,6 +266,7 @@ const MattyUltimateDashboard = () => {
             {socialPlatforms.map((platform) => (
               <button
                 key={platform.name}
+                onClick={openEditor}
                 className={`${platform.color} text-white rounded-2xl p-6 hover:shadow-xl transition-all hover:scale-105`}
               >
                 <platform.icon className="w-8 h-8 mb-3" />
@@ -286,7 +299,11 @@ const MattyUltimateDashboard = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                      <button className="bg-white text-slate-900 px-6 py-3 rounded-full font-bold">
+                      <button 
+                        onClick={openEditor}
+                        className="bg-white text-slate-900 px-6 py-3 rounded-full font-bold flex items-center gap-2"
+                      >
+                        <Edit className="w-4 h-4" />
                         Open Editor
                       </button>
                     </div>
@@ -309,10 +326,7 @@ const MattyUltimateDashboard = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold text-slate-900">Browse Templates</h2>
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition"
-              >
+              <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition">
                 <Filter className="w-4 h-4" />
                 Filters
               </button>
@@ -382,7 +396,10 @@ const MattyUltimateDashboard = () => {
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center gap-3">
-                  <button className="bg-white text-slate-900 px-6 py-3 rounded-full font-bold hover:scale-105 transition">
+                  <button 
+                    onClick={openEditor}
+                    className="bg-white text-slate-900 px-6 py-3 rounded-full font-bold hover:scale-105 transition"
+                  >
                     Use Template
                   </button>
                   <button className="text-white hover:text-purple-300 transition">
@@ -422,6 +439,7 @@ const MattyUltimateDashboard = () => {
               {drafts.map((draft) => (
                 <div
                   key={draft.id}
+                  onClick={openEditor}
                   className="bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition cursor-pointer"
                 >
                   <div className="flex items-center justify-between mb-2">
@@ -443,4 +461,4 @@ const MattyUltimateDashboard = () => {
   );
 };
 
-export default MattyUltimateDashboard;
+export default MattyDashboard;
