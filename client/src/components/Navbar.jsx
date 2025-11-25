@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AppBar, Toolbar, Typography, Button, InputBase, Box, IconButton } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, Star, Clock, Add } from "@mui/icons-material";
+import { Search, Star, Schedule, Add } from "@mui/icons-material";  // Changed Clock to Schedule
 import { styled, alpha } from "@mui/material/styles";
 
 const SearchBox = styled('div')(({ theme }) => ({
@@ -136,7 +136,7 @@ const Navbar = () => {
         {/* Action Buttons */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 2 }}>
           <IconButton color="inherit" onClick={() => navigate("/dashboard")} title="Recent">
-            <Clock />
+            <Schedule />
           </IconButton>
           <IconButton color="inherit" onClick={() => navigate("/favorites")} title="Favorites">
             <Star />
