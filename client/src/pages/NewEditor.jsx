@@ -2,18 +2,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   Box, AppBar, Toolbar, Button, IconButton, Typography, 
   Drawer, List, ListItem, ListItemIcon, ListItemText,
-  TextField, Slider, Paper, Divider, Tooltip
+  TextField, Slider, Paper, Divider
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
-  ArrowLeft, Download, Save, Undo, Redo, 
-  ZoomIn, ZoomOut, Type, Square, Circle, 
-  Upload, Trash2, Eye, EyeOff, Copy, Layers,
-  Image as ImageIcon
+  ArrowLeft, Download, Save, ZoomIn, ZoomOut, 
+  Type, Square, Circle, Upload, Trash2, Eye, EyeOff, 
+  Copy, Layers, Image as ImageIcon
 } from 'lucide-react';
 
 const NewEditor = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const [fabricCanvas, setFabricCanvas] = useState(null);
@@ -25,17 +25,21 @@ const NewEditor = () => {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(true);
   const [rightDrawerOpen, setRightDrawerOpen] = useState(true);
 
+  // Get template data from navigation state
+  const templateData = location.state?.template;
+
   // Load Fabric.js
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js';
     script.async = true;
     script.onload = () => {
-      console.log('Fabric.js loaded');
+      console.log('Fabric.js loaded successfully');
       setFabricLoaded(true);
     };
     script.onerror = () => {
       console.error('Failed to load Fabric.js');
+      alert('Failed to load the editor. Please refresh the page.');
     };
     document.body.appendChild(script);
 
@@ -49,6 +53,8 @@ const NewEditor = () => {
   // Initialize Canvas
   useEffect(() => {
     if (fabricLoaded && canvasRef.current && !fabricCanvas && window.fabric) {
+      console.log('Initializing canvas...');
+      
       const canvas = new window.fabric.Canvas(canvasRef.current, {
         width: 1080,
         height: 1080,
@@ -56,16 +62,109 @@ const NewEditor = () => {
         preserveObjectStacking: true
       });
 
-      canvas.on('selection:created', (e) => setActiveObject(e.selected[0]));
+      // Event listeners
+      canvas.on('selection:created', (e) => {
+        console.log('Object selected');
+        setActiveObject(e.selected[0]);
+      });
       canvas.on('selection:updated', (e) => setActiveObject(e.selected[0]));
       canvas.on('selection:cleared', () => setActiveObject(null));
       canvas.on('object:added', () => updateLayers(canvas));
       canvas.on('object:removed', () => updateLayers(canvas));
 
       setFabricCanvas(canvas);
-      console.log('Canvas initialized');
+      console.log('Canvas initialized successfully');
+
+      // Load template if provided
+      if (templateData) {
+        loadTemplate(canvas, templateData);
+      }
     }
-  }, [fabricLoaded, canvasRef.current, bgColor]);
+  }, [fabricLoaded, canvasRef.current, bgColor, templateData]);
+
+  const loadTemplate = (canvas, template) => {
+    console.log('Loading template:', template);
+    
+    // Set background color
+    if (template.backgroundColor) {
+      canvas.setBackgroundColor(template.backgroundColor, canvas.renderAll.bind(canvas));
+      setBgColor(template.backgroundColor);
+    }
+
+    // Load background image if exists
+    if (template.backgroundImage) {
+      window.fabric.Image.fromURL(template.backgroundImage, (img) => {
+        img.scaleToWidth(1080);
+        img.scaleToHeight(1080);
+        img.selectable = false;
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+      });
+    }
+
+    // Add template elements
+    if (template.elements) {
+      template.elements.forEach(element => {
+        switch(element.type) {
+          case 'text':
+            const text = new window.fabric.IText(element.text || 'Edit me', {
+              left: element.left || 100,
+              top: element.top || 100,
+              fontSize: element.fontSize || 32,
+              fill: element.fill || '#000000',
+              fontFamily: element.fontFamily || 'Arial',
+              fontWeight: element.fontWeight || 'normal'
+            });
+            text.name = element.name || 'Text Layer';
+            canvas.add(text);
+            break;
+
+          case 'rect':
+            const rect = new window.fabric.Rect({
+              left: element.left || 150,
+              top: element.top || 150,
+              width: element.width || 200,
+              height: element.height || 150,
+              fill: element.fill || '#6366f1',
+              stroke: element.stroke || '#000',
+              strokeWidth: element.strokeWidth || 2
+            });
+            rect.name = element.name || 'Rectangle';
+            canvas.add(rect);
+            break;
+
+          case 'circle':
+            const circle = new window.fabric.Circle({
+              left: element.left || 150,
+              top: element.top || 150,
+              radius: element.radius || 100,
+              fill: element.fill || '#ec4899',
+              stroke: element.stroke || '#000',
+              strokeWidth: element.strokeWidth || 2
+            });
+            circle.name = element.name || 'Circle';
+            canvas.add(circle);
+            break;
+
+          case 'image':
+            if (element.src) {
+              window.fabric.Image.fromURL(element.src, (img) => {
+                img.set({
+                  left: element.left || 100,
+                  top: element.top || 100
+                });
+                if (element.scaleX) img.scaleX = element.scaleX;
+                if (element.scaleY) img.scaleY = element.scaleY;
+                img.name = element.name || 'Image';
+                canvas.add(img);
+              });
+            }
+            break;
+        }
+      });
+    }
+
+    canvas.renderAll();
+  };
 
   const updateLayers = (canvas) => {
     if (!canvas) return;
@@ -81,55 +180,82 @@ const NewEditor = () => {
   };
 
   const addText = () => {
-    if (!fabricCanvas) return;
-    const text = new window.fabric.IText('Double click to edit', {
-      left: 100,
-      top: 100,
-      fontSize: 32,
-      fill: '#000000',
-      fontFamily: 'Arial'
-    });
-    text.name = 'Text Layer';
-    fabricCanvas.add(text);
-    fabricCanvas.setActiveObject(text);
-    fabricCanvas.renderAll();
+    if (!fabricCanvas || !window.fabric) {
+      console.error('Canvas not ready');
+      alert('Canvas is not ready. Please wait a moment and try again.');
+      return;
+    }
+
+    console.log('Adding text...');
+    try {
+      const text = new window.fabric.IText('Double click to edit', {
+        left: 100,
+        top: 100,
+        fontSize: 32,
+        fill: '#000000',
+        fontFamily: 'Arial'
+      });
+      text.name = 'Text Layer';
+      fabricCanvas.add(text);
+      fabricCanvas.setActiveObject(text);
+      fabricCanvas.renderAll();
+      console.log('Text added successfully');
+    } catch (error) {
+      console.error('Error adding text:', error);
+      alert('Failed to add text. Please try again.');
+    }
   };
 
   const addShape = (shapeType) => {
-    if (!fabricCanvas) return;
-    let shape;
-    if (shapeType === 'rectangle') {
-      shape = new window.fabric.Rect({
-        left: 150,
-        top: 150,
-        width: 200,
-        height: 150,
-        fill: '#6366f1',
-        stroke: '#000',
-        strokeWidth: 2
-      });
-      shape.name = 'Rectangle';
-    } else if (shapeType === 'circle') {
-      shape = new window.fabric.Circle({
-        left: 150,
-        top: 150,
-        radius: 100,
-        fill: '#ec4899',
-        stroke: '#000',
-        strokeWidth: 2
-      });
-      shape.name = 'Circle';
+    if (!fabricCanvas || !window.fabric) {
+      console.error('Canvas not ready');
+      alert('Canvas is not ready. Please wait a moment and try again.');
+      return;
     }
-    if (shape) {
-      fabricCanvas.add(shape);
-      fabricCanvas.setActiveObject(shape);
-      fabricCanvas.renderAll();
+
+    console.log('Adding shape:', shapeType);
+    try {
+      let shape;
+      if (shapeType === 'rectangle') {
+        shape = new window.fabric.Rect({
+          left: 150,
+          top: 150,
+          width: 200,
+          height: 150,
+          fill: '#6366f1',
+          stroke: '#000',
+          strokeWidth: 2
+        });
+        shape.name = 'Rectangle';
+      } else if (shapeType === 'circle') {
+        shape = new window.fabric.Circle({
+          left: 150,
+          top: 150,
+          radius: 100,
+          fill: '#ec4899',
+          stroke: '#000',
+          strokeWidth: 2
+        });
+        shape.name = 'Circle';
+      }
+      
+      if (shape) {
+        fabricCanvas.add(shape);
+        fabricCanvas.setActiveObject(shape);
+        fabricCanvas.renderAll();
+        console.log('Shape added successfully');
+      }
+    } catch (error) {
+      console.error('Error adding shape:', error);
+      alert('Failed to add shape. Please try again.');
     }
   };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
-    if (!file || !fabricCanvas) return;
+    if (!file || !fabricCanvas || !window.fabric) return;
+    
+    console.log('Uploading image...');
     const reader = new FileReader();
     reader.onload = (event) => {
       window.fabric.Image.fromURL(event.target.result, (img) => {
@@ -138,6 +264,7 @@ const NewEditor = () => {
         fabricCanvas.add(img);
         fabricCanvas.setActiveObject(img);
         fabricCanvas.renderAll();
+        console.log('Image uploaded successfully');
       });
     };
     reader.readAsDataURL(file);
@@ -235,19 +362,51 @@ const NewEditor = () => {
             Tools
           </Typography>
           <List>
-            <ListItem button onClick={addText}>
+            <ListItem 
+              button 
+              onClick={addText}
+              sx={{ 
+                mb: 1, 
+                borderRadius: 1,
+                '&:hover': { bgcolor: '#f5f5f5' }
+              }}
+            >
               <ListItemIcon><Type size={20} /></ListItemIcon>
               <ListItemText primary="Add Text" />
             </ListItem>
-            <ListItem button onClick={() => addShape('rectangle')}>
+            <ListItem 
+              button 
+              onClick={() => addShape('rectangle')}
+              sx={{ 
+                mb: 1, 
+                borderRadius: 1,
+                '&:hover': { bgcolor: '#f5f5f5' }
+              }}
+            >
               <ListItemIcon><Square size={20} /></ListItemIcon>
               <ListItemText primary="Add Rectangle" />
             </ListItem>
-            <ListItem button onClick={() => addShape('circle')}>
+            <ListItem 
+              button 
+              onClick={() => addShape('circle')}
+              sx={{ 
+                mb: 1, 
+                borderRadius: 1,
+                '&:hover': { bgcolor: '#f5f5f5' }
+              }}
+            >
               <ListItemIcon><Circle size={20} /></ListItemIcon>
               <ListItemText primary="Add Circle" />
             </ListItem>
-            <ListItem button onClick={() => fileInputRef.current?.click()}>
+            <ListItem 
+              button 
+              onClick={() => fileInputRef.current?.click()}
+              sx={{ 
+                mb: 1, 
+                borderRadius: 1,
+                '&:hover': { bgcolor: '#f5f5f5' }
+              }}
+            >
               <ListItemIcon><Upload size={20} /></ListItemIcon>
               <ListItemText primary="Upload Image" />
             </ListItem>
@@ -324,7 +483,7 @@ const NewEditor = () => {
               <ArrowLeft />
             </IconButton>
             <Typography variant="h6" sx={{ ml: 2, flex: 1 }}>
-              Untitled Design
+              {templateData ? templateData.title : 'Untitled Design'}
             </Typography>
             
             <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
@@ -445,7 +604,7 @@ const NewEditor = () => {
 
           {activeObject && (
             <Box sx={{ mt: 3 }}>
-              <Divider sx={{ mb: 2 }} />
+              <Divider sx={{ my: 2 }} />
               <Button fullWidth variant="outlined" startIcon={<Copy />} onClick={duplicateSelected}>
                 Duplicate
               </Button>

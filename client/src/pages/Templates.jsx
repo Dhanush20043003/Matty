@@ -12,106 +12,548 @@ const Templates = () => {
   const [viewMode, setViewMode] = useState('grid');
 
   const categories = [
-    { id: 'all', name: 'All Templates', count: 1500 },
-    { id: 'social', name: 'Social Media', count: 450 },
-    { id: 'collage', name: 'Photo Collage', count: 180 },
-    { id: 'business', name: 'Business', count: 320 },
-    { id: 'web', name: 'Web Graphics', count: 200 }
+    { id: 'all', name: 'All Templates', count: 12 },
+    { id: 'social', name: 'Social Media', count: 6 },
+    { id: 'business', name: 'Business', count: 3 },
+    { id: 'marketing', name: 'Marketing', count: 3 }
   ];
 
+  // Template definitions with actual design elements
   const templates = [
     {
       id: 1,
-      title: 'Instagram Post - Fashion',
+      title: 'Instagram Post - Summer Sale',
       category: 'social',
       platform: 'instagram',
       size: '1080x1080',
-      thumbnail: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=600&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=600&fit=crop',
       premium: false,
-      tags: ['fashion', 'square', 'minimal'],
+      tags: ['sale', 'summer', 'instagram'],
       popular: true,
-      downloads: 1420
+      downloads: 1420,
+      templateData: {
+        backgroundColor: '#FFE5B4',
+        elements: [
+          {
+            type: 'rect',
+            left: 50,
+            top: 50,
+            width: 980,
+            height: 300,
+            fill: '#FF6B6B',
+            stroke: '#000',
+            strokeWidth: 0,
+            name: 'Header Background'
+          },
+          {
+            type: 'text',
+            text: 'SUMMER SALE',
+            left: 200,
+            top: 120,
+            fontSize: 80,
+            fill: '#FFFFFF',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Title Text'
+          },
+          {
+            type: 'text',
+            text: 'UP TO 50% OFF',
+            left: 300,
+            top: 220,
+            fontSize: 48,
+            fill: '#FFFFFF',
+            fontFamily: 'Arial',
+            name: 'Subtitle Text'
+          },
+          {
+            type: 'circle',
+            left: 400,
+            top: 500,
+            radius: 150,
+            fill: '#4ECDC4',
+            stroke: '#000',
+            strokeWidth: 0,
+            name: 'Decorative Circle'
+          },
+          {
+            type: 'text',
+            text: 'Shop Now',
+            left: 420,
+            top: 900,
+            fontSize: 40,
+            fill: '#000000',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'CTA Text'
+          }
+        ]
+      }
     },
     {
       id: 2,
-      title: 'Photo Collage - 6 Grid',
-      category: 'collage',
-      size: '1200x1200',
-      thumbnail: 'https://images.unsplash.com/photo-1542435503-956c469947f6?w=600&h=600&fit=crop',
+      title: 'Instagram Story - Product Launch',
+      category: 'social',
+      platform: 'instagram',
+      size: '1080x1920',
+      thumbnail: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=600&fit=crop',
       premium: false,
-      tags: ['grid', 'memories', 'family'],
+      tags: ['story', 'product', 'launch'],
       popular: true,
-      downloads: 2150
+      downloads: 2890,
+      templateData: {
+        backgroundColor: '#6C5CE7',
+        elements: [
+          {
+            type: 'text',
+            text: 'NEW ARRIVAL',
+            left: 200,
+            top: 200,
+            fontSize: 64,
+            fill: '#FFFFFF',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Header'
+          },
+          {
+            type: 'rect',
+            left: 100,
+            top: 600,
+            width: 880,
+            height: 600,
+            fill: '#FFFFFF',
+            stroke: '#000',
+            strokeWidth: 0,
+            name: 'Content Box'
+          },
+          {
+            type: 'text',
+            text: 'Product Name',
+            left: 250,
+            top: 750,
+            fontSize: 48,
+            fill: '#000000',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Product Title'
+          },
+          {
+            type: 'text',
+            text: 'Swipe up to shop',
+            left: 300,
+            top: 1600,
+            fontSize: 36,
+            fill: '#FFFFFF',
+            fontFamily: 'Arial',
+            name: 'CTA'
+          }
+        ]
+      }
     },
     {
       id: 3,
-      title: 'Business Card',
+      title: 'Business Card - Modern',
       category: 'business',
-      size: '3.5x2 in',
+      size: '1080x1080',
       thumbnail: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&h=400&fit=crop',
       premium: true,
       tags: ['business', 'professional', 'card'],
       popular: false,
-      downloads: 650
+      downloads: 650,
+      templateData: {
+        backgroundColor: '#2C3E50',
+        elements: [
+          {
+            type: 'rect',
+            left: 0,
+            top: 0,
+            width: 540,
+            height: 1080,
+            fill: '#34495E',
+            stroke: '#000',
+            strokeWidth: 0,
+            name: 'Left Panel'
+          },
+          {
+            type: 'text',
+            text: 'John Doe',
+            left: 600,
+            top: 300,
+            fontSize: 60,
+            fill: '#FFFFFF',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Name'
+          },
+          {
+            type: 'text',
+            text: 'Graphic Designer',
+            left: 600,
+            top: 380,
+            fontSize: 32,
+            fill: '#BDC3C7',
+            fontFamily: 'Arial',
+            name: 'Job Title'
+          },
+          {
+            type: 'text',
+            text: 'john@email.com',
+            left: 600,
+            top: 500,
+            fontSize: 28,
+            fill: '#FFFFFF',
+            fontFamily: 'Arial',
+            name: 'Email'
+          },
+          {
+            type: 'text',
+            text: '+1 234 567 8900',
+            left: 600,
+            top: 550,
+            fontSize: 28,
+            fill: '#FFFFFF',
+            fontFamily: 'Arial',
+            name: 'Phone'
+          }
+        ]
+      }
     },
     {
       id: 4,
-      title: 'Instagram Story - Travel',
+      title: 'Facebook Post - Event',
       category: 'social',
-      platform: 'instagram',
-      size: '1080x1920',
-      thumbnail: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&h=600&fit=crop',
+      platform: 'facebook',
+      size: '1080x1080',
+      thumbnail: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&h=600&fit=crop',
       premium: false,
-      tags: ['story', 'travel', 'adventure'],
+      tags: ['event', 'facebook', 'party'],
       popular: true,
-      downloads: 3200
+      downloads: 1890,
+      templateData: {
+        backgroundColor: '#F8B500',
+        elements: [
+          {
+            type: 'circle',
+            left: 390,
+            top: 90,
+            radius: 300,
+            fill: '#FFFFFF',
+            stroke: '#000',
+            strokeWidth: 0,
+            name: 'Circle Background'
+          },
+          {
+            type: 'text',
+            text: 'YOU\'RE INVITED',
+            left: 180,
+            top: 750,
+            fontSize: 64,
+            fill: '#000000',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Title'
+          },
+          {
+            type: 'text',
+            text: 'Join us for a celebration',
+            left: 200,
+            top: 850,
+            fontSize: 36,
+            fill: '#000000',
+            fontFamily: 'Arial',
+            name: 'Subtitle'
+          },
+          {
+            type: 'text',
+            text: 'Date: December 25, 2024',
+            left: 250,
+            top: 950,
+            fontSize: 28,
+            fill: '#000000',
+            fontFamily: 'Arial',
+            name: 'Date'
+          }
+        ]
+      }
     },
     {
       id: 5,
-      title: 'Web Banner - Hero',
-      category: 'web',
-      size: '1920x600',
-      thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop',
-      premium: true,
-      tags: ['web', 'banner', 'hero'],
-      popular: false,
-      downloads: 540
+      title: 'Marketing Flyer - Gym',
+      category: 'marketing',
+      size: '1080x1080',
+      thumbnail: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=600&fit=crop',
+      premium: false,
+      tags: ['gym', 'fitness', 'flyer'],
+      popular: true,
+      downloads: 1250,
+      templateData: {
+        backgroundColor: '#1E3A8A',
+        elements: [
+          {
+            type: 'text',
+            text: 'GET FIT',
+            left: 300,
+            top: 150,
+            fontSize: 90,
+            fill: '#FFFFFF',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Main Title'
+          },
+          {
+            type: 'text',
+            text: 'JOIN TODAY',
+            left: 280,
+            top: 270,
+            fontSize: 60,
+            fill: '#FCD34D',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Subtitle'
+          },
+          {
+            type: 'rect',
+            left: 150,
+            top: 500,
+            width: 780,
+            height: 400,
+            fill: '#FFFFFF',
+            stroke: '#000',
+            strokeWidth: 0,
+            name: 'Info Box'
+          },
+          {
+            type: 'text',
+            text: 'Limited Time Offer',
+            left: 280,
+            top: 600,
+            fontSize: 48,
+            fill: '#000000',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Offer Text'
+          },
+          {
+            type: 'text',
+            text: 'First Month Free',
+            left: 320,
+            top: 700,
+            fontSize: 42,
+            fill: '#EF4444',
+            fontFamily: 'Arial',
+            name: 'Price'
+          }
+        ]
+      }
     },
     {
       id: 6,
-      title: 'Facebook Cover',
+      title: 'Instagram Post - Quote',
       category: 'social',
-      platform: 'facebook',
-      size: '1640x856',
-      thumbnail: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=600&h=400&fit=crop',
+      platform: 'instagram',
+      size: '1080x1080',
+      thumbnail: 'https://images.unsplash.com/photo-1495344517868-8ebaf0a2044a?w=600&h=600&fit=crop',
       premium: false,
-      tags: ['facebook', 'cover', 'header'],
+      tags: ['quote', 'motivation', 'instagram'],
       popular: true,
-      downloads: 1890
+      downloads: 3200,
+      templateData: {
+        backgroundColor: '#FDE68A',
+        elements: [
+          {
+            type: 'rect',
+            left: 100,
+            top: 300,
+            width: 880,
+            height: 480,
+            fill: 'rgba(0,0,0,0.7)',
+            stroke: '#000',
+            strokeWidth: 0,
+            name: 'Quote Background'
+          },
+          {
+            type: 'text',
+            text: '"Success is not final,',
+            left: 200,
+            top: 400,
+            fontSize: 52,
+            fill: '#FFFFFF',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Quote Line 1'
+          },
+          {
+            type: 'text',
+            text: 'failure is not fatal"',
+            left: 220,
+            top: 480,
+            fontSize: 52,
+            fill: '#FFFFFF',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Quote Line 2'
+          },
+          {
+            type: 'text',
+            text: '- Winston Churchill',
+            left: 380,
+            top: 650,
+            fontSize: 32,
+            fill: '#FCD34D',
+            fontFamily: 'Arial',
+            name: 'Author'
+          }
+        ]
+      }
     },
     {
       id: 7,
-      title: 'YouTube Thumbnail',
-      category: 'social',
-      platform: 'youtube',
-      size: '1280x720',
-      thumbnail: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=400&fit=crop',
-      premium: false,
-      tags: ['youtube', 'thumbnail', 'video'],
-      popular: true,
-      downloads: 2890
+      title: 'Business Presentation Cover',
+      category: 'business',
+      size: '1080x1080',
+      thumbnail: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=600&fit=crop',
+      premium: true,
+      tags: ['business', 'presentation', 'professional'],
+      popular: false,
+      downloads: 890,
+      templateData: {
+        backgroundColor: '#1F2937',
+        elements: [
+          {
+            type: 'rect',
+            left: 0,
+            top: 0,
+            width: 1080,
+            height: 200,
+            fill: '#3B82F6',
+            stroke: '#000',
+            strokeWidth: 0,
+            name: 'Header'
+          },
+          {
+            type: 'text',
+            text: 'QUARTERLY',
+            left: 250,
+            top: 50,
+            fontSize: 64,
+            fill: '#FFFFFF',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Title'
+          },
+          {
+            type: 'text',
+            text: 'REPORT',
+            left: 350,
+            top: 130,
+            fontSize: 48,
+            fill: '#FFFFFF',
+            fontFamily: 'Arial',
+            name: 'Subtitle'
+          },
+          {
+            type: 'text',
+            text: 'Q4 2024',
+            left: 420,
+            top: 500,
+            fontSize: 80,
+            fill: '#FFFFFF',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Quarter'
+          },
+          {
+            type: 'rect',
+            left: 200,
+            top: 700,
+            width: 680,
+            height: 5,
+            fill: '#3B82F6',
+            stroke: '#000',
+            strokeWidth: 0,
+            name: 'Divider'
+          },
+          {
+            type: 'text',
+            text: 'Company Name',
+            left: 380,
+            top: 850,
+            fontSize: 36,
+            fill: '#9CA3AF',
+            fontFamily: 'Arial',
+            name: 'Company'
+          }
+        ]
+      }
     },
     {
       id: 8,
-      title: 'Twitter Post',
-      category: 'social',
-      platform: 'twitter',
-      size: '1200x675',
-      thumbnail: 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?w=600&h=400&fit=crop',
+      title: 'Marketing Banner - Restaurant',
+      category: 'marketing',
+      size: '1080x1080',
+      thumbnail: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=600&fit=crop',
       premium: false,
-      tags: ['twitter', 'post', 'social'],
-      popular: false,
-      downloads: 980
+      tags: ['food', 'restaurant', 'banner'],
+      popular: true,
+      downloads: 1680,
+      templateData: {
+        backgroundColor: '#DC2626',
+        elements: [
+          {
+            type: 'circle',
+            left: 340,
+            top: 340,
+            radius: 280,
+            fill: '#FFFFFF',
+            stroke: '#000',
+            strokeWidth: 0,
+            name: 'Center Circle'
+          },
+          {
+            type: 'text',
+            text: 'GRAND',
+            left: 370,
+            top: 430,
+            fontSize: 70,
+            fill: '#DC2626',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Title 1'
+          },
+          {
+            type: 'text',
+            text: 'OPENING',
+            left: 330,
+            top: 520,
+            fontSize: 70,
+            fill: '#DC2626',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Title 2'
+          },
+          {
+            type: 'text',
+            text: 'Your Restaurant Name',
+            left: 240,
+            top: 850,
+            fontSize: 48,
+            fill: '#FFFFFF',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            name: 'Restaurant Name'
+          },
+          {
+            type: 'text',
+            text: '20% OFF for Opening Week',
+            left: 220,
+            top: 950,
+            fontSize: 36,
+            fill: '#FCD34D',
+            fontFamily: 'Arial',
+            name: 'Offer'
+          }
+        ]
+      }
     }
   ];
 
@@ -121,6 +563,14 @@ const Templates = () => {
                           t.tags.some(tag => tag.includes(searchQuery.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
+
+  const handleUseTemplate = (template) => {
+    navigate('/editor', { 
+      state: { 
+        template: template.templateData 
+      } 
+    });
+  };
 
   return (
     <DashboardLayout>
@@ -305,7 +755,7 @@ const Templates = () => {
                 <Button
                   fullWidth
                   variant="contained"
-                  onClick={() => navigate('/editor')}
+                  onClick={() => handleUseTemplate(template)}
                   sx={{
                     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                     fontWeight: 600,
